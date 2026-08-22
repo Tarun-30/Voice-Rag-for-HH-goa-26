@@ -83,3 +83,5 @@ desktop.ini
 # Generated vector indexes / caches
 **/backend/data/index/
 **/backend/data/corpus_cache.jsonl
+
+.claude/
