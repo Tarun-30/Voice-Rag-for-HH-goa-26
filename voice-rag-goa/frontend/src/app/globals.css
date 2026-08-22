@@ -1,0 +1,180 @@
+@import "tailwindcss";
+
+/*
+ * Goa Hacker House palette + design tokens (Tailwind CSS v4, CSS-first config).
+ * Every --color-* below becomes a utility: bg-palm, text-gold, border-pink, ...
+ */
+@theme {
+  --color-palm: #0a4d2e; /* deep palm green   */
+  --color-palm-600: #0d5c3a; /* lighter palm      */
+  --color-jungle: #0b532d; /* lush jungle green */
+  --color-gold: #ffd200; /* sunny goa gold    */
+  --color-sunshine: #ffd700; /* sunshine yellow   */
+  --color-pink: #ff1493; /* hot pink neon     */
+  --color-cream: #f7f4ea; /* coconut cream     */
+  --color-sand: #efe8d2;
+  --color-ink: #06331f;
+
+  --font-sans: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "Cascadia Code", "SF Mono", "Consolas", ui-monospace, monospace;
+
+  --radius-xl: 1.25rem;
+  --radius-2xl: 1.75rem;
+
+  --shadow-glow-gold: 0 0 24px -4px rgba(255, 210, 0, 0.55);
+  --shadow-glow-pink: 0 0 24px -4px rgba(255, 20, 147, 0.55);
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-cream);
+  background:
+    radial-gradient(1200px 600px at 12% -8%, rgba(255, 210, 0, 0.14), transparent 60%),
+    radial-gradient(1000px 620px at 108% 6%, rgba(255, 20, 147, 0.16), transparent 55%),
+    radial-gradient(900px 700px at 50% 120%, rgba(13, 92, 58, 0.55), transparent 60%),
+    linear-gradient(160deg, #06331f 0%, #0a4d2e 45%, #072a1a 100%);
+  background-attachment: fixed;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* --- Reusable component classes --------------------------------------- */
+
+.glass {
+  background: linear-gradient(
+    180deg,
+    rgba(247, 244, 234, 0.09),
+    rgba(247, 244, 234, 0.04)
+  );
+  border: 1px solid rgba(247, 244, 234, 0.14);
+  backdrop-filter: blur(14px);
+  border-radius: var(--radius-2xl);
+}
+
+.glass-tight {
+  background: rgba(247, 244, 234, 0.06);
+  border: 1px solid rgba(247, 244, 234, 0.12);
+  border-radius: var(--radius-xl);
+}
+
+.gradient-text {
+  background: linear-gradient(92deg, var(--color-gold), var(--color-pink) 70%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border: 1px solid rgba(247, 244, 234, 0.16);
+  background: rgba(247, 244, 234, 0.06);
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+/* --- Animations -------------------------------------------------------- */
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.7;
+  }
+  70% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+.animate-pulse-ring {
+  animation: pulse-ring 1.8s cubic-bezier(0.25, 0.6, 0.35, 1) infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 210, 0, 0.18),
+    transparent
+  );
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.35s ease-out both;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+.caret::after {
+  content: "▋";
+  margin-left: 1px;
+  color: var(--color-gold);
+  animation: blink 1s step-start infinite;
+}
+
+/* --- Scrollbar --------------------------------------------------------- */
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(255, 210, 0, 0.25);
+  border-radius: 999px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}

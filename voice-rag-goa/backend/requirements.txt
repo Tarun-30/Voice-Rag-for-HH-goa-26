@@ -1,0 +1,49 @@
+# Voice RAG (Goa Hacker House) - backend dependencies
+#
+# Pinned to the versions this project was built and measured against on
+# Python 3.14 / Windows. Everything here has a cp314 wheel; nothing needs a
+# compiler.
+#
+#   python -m venv .venv
+#   .venv\Scripts\activate          (Windows)   source .venv/bin/activate (unix)
+#   pip install -r requirements.txt
+
+# --- web layer -------------------------------------------------------------- #
+fastapi==0.135.3
+uvicorn[standard]==0.42.0
+websockets==16.0
+python-multipart==0.0.22        # multipart/form-data for POST /api/transcribe
+pydantic==2.12.5
+python-dotenv==1.2.2
+httpx==0.28.1                   # async client for every third-party API
+orjson==3.12.0                  # fast JSON for the WebSocket hot path
+
+# --- embeddings ------------------------------------------------------------- #
+# We drive onnxruntime directly rather than through fastembed: fastembed serves
+# an int8 graph that measured 13x slower than the official fp32 export on this
+# CPU. See app/embeddings.py for the full measurement.
+onnxruntime==1.29.0
+tokenizers==0.23.1
+huggingface-hub==1.8.0
+numpy==2.4.2
+
+# --- retrieval -------------------------------------------------------------- #
+lancedb==0.37.1                 # durable vector store + native BM25 FTS
+tantivy==0.26.0                 # LanceDB full-text-search backend
+rank-bm25==0.2.2                # in-memory sparse scorer for the low-latency path
+pyarrow==23.0.0                 # parquet range reads against the HF hub
+pandas==2.3.3                   # LanceDB <-> dataframe interop
+
+# --- dataset ---------------------------------------------------------------- #
+# `datasets` is optional and is NOT imported by ingest.py: it reads the parquet
+# shards directly over HfFileSystem because the hub's datasets-server viewer API
+# returns HTTP 500 on this repo (nested-list Arrow conversion bug). Kept only as a
+# convenience for ad-hoc dataset exploration; safe to remove if you don't need it.
+datasets==5.0.1
+tqdm==4.67.3
+
+# --- optional --------------------------------------------------------------- #
+# fastembed is NOT required at runtime. Install it only if you want
+# `OnnxEmbedder.verify_against_reference()` to cross-check our fast path against
+# the reference implementation.
+# fastembed==0.8.0
